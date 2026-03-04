@@ -1,0 +1,36 @@
+<section class="login-wrap">
+  <div class="login-card">
+    <h1>Entrar</h1>
+    <p>Acesso exclusivo para times e administrador master.</p>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <label for="email">E-mail</label>
+      <input id="email" type="email" placeholder="time@adbangu.org" formControlName="email" />
+      @if (loginForm.controls.email.touched && loginForm.controls.email.invalid) {
+        <small class="field-error">Informe um e-mail valido.</small>
+      }
+
+      <label for="password">Senha</label>
+      <input id="password" type="password" placeholder="Sua senha" formControlName="password" />
+      @if (loginForm.controls.password.touched && loginForm.controls.password.invalid) {
+        <small class="field-error">Informe a senha.</small>
+      }
+
+      <button type="submit" [disabled]="auth.isLoading()">
+        {{ auth.isLoading() ? 'Entrando...' : 'Acessar' }}
+      </button>
+
+      @if (!auth.isConfigured()) {
+        <small class="field-error">
+          Firebase nao configurado. Preencha <code>src/environments/environment.ts</code>.
+        </small>
+      }
+
+      @if (errorMessage()) {
+        <small class="field-error">{{ errorMessage() }}</small>
+      }
+
+      <small class="hint">Sem cadastro publico. Solicite acesso ao administrador master.</small>
+    </form>
+  </div>
+</section>

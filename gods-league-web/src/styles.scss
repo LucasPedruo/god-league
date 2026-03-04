@@ -1,0 +1,29 @@
+:root {
+  --color-bg: #090d0b;
+  --color-bg-soft: #0f1613;
+  --color-surface: #121b17;
+  --color-surface-elevated: #17231e;
+  --color-border: #24322b;
+  --color-accent: #45d483;
+  --color-text: #e7f4ed;
+  --color-text-muted: #9eb6a9;
+  --color-danger: #ff7a7a;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background:
+    radial-gradient(circle at 15% -10%, #174630 0%, transparent 45%),
+    radial-gradient(circle at 90% 10%, #113023 0%, transparent 30%),
+    var(--color-bg);
+  color: var(--color-text);
+  font-family: "Segoe UI", "Trebuchet MS", sans-serif;
+}

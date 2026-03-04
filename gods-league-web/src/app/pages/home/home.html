@@ -1,0 +1,111 @@
+<section class="hero">
+  <p class="kicker">Temporada AdBangu</p>
+  <h1>Gods League</h1>
+  <p class="subtitle">
+    Plataforma oficial para regulamento, tabela, jogos e estatisticas do campeonato de jovens.
+  </p>
+</section>
+
+@if (loading()) {
+  <section class="state-card">
+    <p>Carregando dados da temporada...</p>
+  </section>
+} @else if (error()) {
+  <section class="state-card">
+    <p>{{ error() }}</p>
+    <button type="button" (click)="reload()">Tentar novamente</button>
+  </section>
+} @else {
+  <section class="section">
+    <div class="section-head">
+      <h2>Times Inscritos</h2>
+      <p>{{ teams().length }} equipes na temporada</p>
+    </div>
+    <div class="teams-grid">
+      @for (team of teams(); track team.id) {
+        <article class="team-card">
+          <img [src]="team.shieldUrl" [alt]="'Escudo de ' + team.name" loading="lazy" />
+          <p>{{ team.name }}</p>
+        </article>
+      } @empty {
+        <p class="empty-text">Nenhum time inscrito publicado.</p>
+      }
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>Tabela do Campeonato</h2>
+      <p>Jogos marcados com data e horario</p>
+    </div>
+
+    <div class="matches-table-wrap">
+      <table class="matches-table">
+        <thead>
+          <tr>
+            <th>Rodada</th>
+            <th>Data</th>
+            <th>Horario</th>
+            <th>Mandante</th>
+            <th>Visitante</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (match of matches(); track match.id) {
+            <tr>
+              <td>{{ match.round }}</td>
+              <td>{{ match.date }}</td>
+              <td>{{ match.time }}</td>
+              <td>
+                <div class="team-inline">
+                  <img [src]="match.homeTeam.shieldUrl" [alt]="'Escudo de ' + match.homeTeam.name" loading="lazy" />
+                  <span>{{ match.homeTeam.name }}</span>
+                </div>
+              </td>
+              <td>
+                <div class="team-inline">
+                  <img [src]="match.awayTeam.shieldUrl" [alt]="'Escudo de ' + match.awayTeam.name" loading="lazy" />
+                  <span>{{ match.awayTeam.name }}</span>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="5" class="empty-cell">Nenhum jogo publicado.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>Resumo MVP de Estatisticas</h2>
+      <p>Top 3 por categoria alimentado pelo administrador master</p>
+    </div>
+
+    <div class="stats-grid">
+      @for (category of mvpSummary(); track category.id) {
+        <article class="stat-card">
+          <h3>{{ category.title }}</h3>
+          <ol>
+            @for (item of category.top3; track $index) {
+              <li>
+                <div class="player-meta">
+                  <strong>{{ item.playerName }}</strong>
+                  <small>{{ item.teamName }}</small>
+                </div>
+                <span>{{ item.value }} {{ category.unit }}</span>
+              </li>
+            } @empty {
+              <li>
+                <span class="empty-text">Sem dados publicados.</span>
+              </li>
+            }
+          </ol>
+        </article>
+      }
+    </div>
+  </section>
+}
