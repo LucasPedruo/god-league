@@ -47,6 +47,8 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .topnav a {
@@ -148,6 +150,12 @@
   padding: 1rem;
 }
 
+.content.dashboard-content {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+}
+
 @media (max-width: 640px) {
   .topbar {
     height: auto;
@@ -158,7 +166,7 @@
   }
 
   .topnav {
-    justify-content: space-between;
+    justify-content: flex-start;
   }
 
   .profile-name {

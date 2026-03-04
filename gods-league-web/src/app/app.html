@@ -1,34 +1,39 @@
 <div class="app-shell">
-  <header class="topbar">
-    <a class="brand" routerLink="/">
-      <span class="brand-mark">GL</span>
-      <span class="brand-text">{{ title }}</span>
-    </a>
+  @if (!dashboardRoute()) {
+    <header class="topbar">
+      <a class="brand" routerLink="/">
+        <span class="brand-mark">GL</span>
+        <span class="brand-text">{{ title }}</span>
+      </a>
 
-    <nav class="topnav">
-      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Site</a>
-      @if (auth.isLoggedIn()) {
-        <details class="profile-menu">
-          <summary>
-            <img
-              class="profile-avatar"
-              [src]="auth.photoUrl() || 'https://placehold.co/64x64/17231e/e7f4ed?text=U'"
-              alt="Foto do usuario"
-            />
-            <span class="profile-name">{{ auth.displayName() || 'Usuario' }}</span>
-          </summary>
-          <div class="profile-dropdown">
-            <a routerLink="/dashboard">Painel Administrativo</a>
-            <button type="button" (click)="logout()">Sair</button>
-          </div>
-        </details>
-      } @else {
-        <a class="login-link" routerLink="/login" routerLinkActive="active">Entrar</a>
-      }
-    </nav>
-  </header>
+      <nav class="topnav">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Inicio</a>
+        <a routerLink="/classificacao" routerLinkActive="active">Classificacao</a>
+        <a routerLink="/times" routerLinkActive="active">Times</a>
+        <a routerLink="/estatisticas" routerLinkActive="active">Estatisticas detalhadas</a>
+        @if (auth.isLoggedIn()) {
+          <details class="profile-menu">
+            <summary>
+              <img
+                class="profile-avatar"
+                [src]="auth.photoUrl() || 'https://placehold.co/64x64/17231e/e7f4ed?text=U'"
+                alt="Foto do usuario"
+              />
+              <span class="profile-name">{{ auth.displayName() || 'Usuario' }}</span>
+            </summary>
+            <div class="profile-dropdown">
+              <a routerLink="/dashboard">Painel Administrativo</a>
+              <button type="button" (click)="logout()">Sair</button>
+            </div>
+          </details>
+        } @else {
+          <a class="login-link" routerLink="/login" routerLinkActive="active">Entrar</a>
+        }
+      </nav>
+    </header>
+  }
 
-  <main class="content">
+  <main class="content" [class.dashboard-content]="dashboardRoute()">
     <router-outlet />
   </main>
 </div>

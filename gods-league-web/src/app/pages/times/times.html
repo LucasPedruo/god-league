@@ -1,0 +1,27 @@
+<section class="page-head">
+  <h1>Times</h1>
+  <p>Todos os times cadastrados na temporada ativa.</p>
+</section>
+
+@if (loading()) {
+  <section class="state-card"><p>Carregando times...</p></section>
+} @else if (error()) {
+  <section class="state-card">
+    <p>{{ error() }}</p>
+    <button type="button" (click)="reload()">Tentar novamente</button>
+  </section>
+} @else {
+  <section class="teams-wrap">
+    <div class="teams-grid">
+      @for (team of teams(); track team.id) {
+        <article class="team-card">
+          <img [src]="team.shieldUrl" [alt]="'Escudo de ' + team.name" loading="lazy" />
+          <h2>{{ team.name }}</h2>
+          <small>ID: {{ team.id }}</small>
+        </article>
+      } @empty {
+        <p class="empty">Nenhum time cadastrado.</p>
+      }
+    </div>
+  </section>
+}

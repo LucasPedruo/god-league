@@ -1,0 +1,74 @@
+.page-head {
+  margin: 0 1rem 1rem;
+}
+
+.page-head h1 {
+  margin: 0;
+}
+
+.page-head p {
+  margin: 0.3rem 0 0;
+  color: var(--color-text-muted);
+}
+
+.state-card,
+.table-wrap {
+  margin: 0 1rem 1.2rem;
+  padding: 1rem;
+  border-radius: 14px;
+  border: 1px solid var(--color-border);
+  background: linear-gradient(170deg, var(--color-surface), #0f1714);
+}
+
+.state-card p {
+  margin: 0 0 0.7rem;
+  color: var(--color-text-muted);
+}
+
+.state-card button {
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-elevated);
+  color: var(--color-text);
+  border-radius: 8px;
+  padding: 0.45rem 0.75rem;
+}
+
+table {
+  width: 100%;
+  min-width: 920px;
+  border-collapse: collapse;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+th,
+td {
+  padding: 0.6rem 0.45rem;
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+}
+
+th {
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+.team-inline {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.team-inline img {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+}
+
+.empty {
+  color: var(--color-text-muted);
+}

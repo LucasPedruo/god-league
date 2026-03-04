@@ -1,0 +1,82 @@
+<section class="page-head">
+  <h1>Estatisticas Detalhadas</h1>
+  <p>Resumo e ranking completo dos jogadores por categoria.</p>
+</section>
+
+@if (loading()) {
+  <section class="state-card"><p>Carregando estatisticas...</p></section>
+} @else if (error()) {
+  <section class="state-card">
+    <p>{{ error() }}</p>
+    <button type="button" (click)="reload()">Tentar novamente</button>
+  </section>
+} @else {
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Resumo</h2>
+      <small>Mesma base exibida no inicio</small>
+    </div>
+
+    <div class="summary-grid">
+      @for (category of summary(); track category.id) {
+        <article class="summary-card">
+          <h3>{{ category.title }}</h3>
+          <ol>
+            @for (item of category.top3; track $index) {
+              <li>
+                <span>{{ item.playerName }} ({{ item.teamName }})</span>
+                <strong>{{ item.value }}</strong>
+              </li>
+            } @empty {
+              <li><span>Sem dados</span></li>
+            }
+          </ol>
+        </article>
+      }
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Filtro Avancado</h2>
+      <small>Categoria atual: {{ selectedCategoryMeta.title }}</small>
+    </div>
+
+    <div class="filters">
+      @for (category of categories; track category.id) {
+        <button
+          type="button"
+          [class.active]="selectedCategory() === category.id"
+          (click)="selectCategory(category.id)"
+        >
+          {{ getCategoryTitle(category) }}
+        </button>
+      }
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Jogador</th>
+            <th>Time</th>
+            <th>{{ selectedCategoryMeta.unit }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of rows(); track row.playerId; let i = $index) {
+            <tr>
+              <td>{{ i + 1 }}</td>
+              <td>{{ row.playerName }}</td>
+              <td>{{ row.teamName }}</td>
+              <td><strong>{{ row.value }}</strong></td>
+            </tr>
+          } @empty {
+            <tr><td colspan="4" class="empty">Nenhum jogador com dados nessa categoria.</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+}

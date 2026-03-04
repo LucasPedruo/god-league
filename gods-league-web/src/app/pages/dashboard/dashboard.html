@@ -1,21 +1,418 @@
-<section class="dashboard">
-  <h1>Dashboard do Time</h1>
-  <p class="subtitle">
-    Base inicial do painel. Proximos blocos: elenco, validacoes, jogos e historico de alteracoes.
-  </p>
+<div class="dashboard-shell">
+  <aside class="sidebar">
+    <h2>Painel Master</h2>
+    <p>Gestao administrativa do campeonato</p>
 
-  <div class="widgets">
-    <article class="widget">
-      <h2>Elenco</h2>
-      <p>0 jogadores cadastrados</p>
+    <nav>
+      <button type="button" [class.active]="activeSection() === 'overview'" (click)="setSection('overview')">Visao geral</button>
+      <button type="button" [class.active]="activeSection() === 'users'" (click)="setSection('users')">Acesso de usuarios</button>
+      <button type="button" [class.active]="activeSection() === 'seasons'" (click)="setSection('seasons')">Temporadas</button>
+      <button type="button" [class.active]="activeSection() === 'teams'" (click)="setSection('teams')">Times</button>
+      <button type="button" [class.active]="activeSection() === 'players'" (click)="setSection('players')">Jogadores</button>
+      <button type="button" [class.active]="activeSection() === 'matches'" (click)="setSection('matches')">Tabela/Jogos</button>
+      <button type="button" [class.active]="activeSection() === 'results'" (click)="setSection('results')">Resultados</button>
+      <button type="button" [class.active]="activeSection() === 'mvp'" (click)="setSection('mvp')">MVP Estatisticas</button>
+    </nav>
+
+    <button class="logout-btn" type="button" (click)="logout()">Sair</button>
+  </aside>
+
+  <section class="content">
+    @if (!isMaster()) {
+      <article class="card">
+        <h1>Acesso restrito</h1>
+        <p>Somente usuarios MASTER/ADMIN podem acessar este painel administrativo.</p>
+      </article>
+    } @else {
+      @if (activeSection() === 'overview') {
+        <article class="card">
+          <h1>Visao geral</h1>
+          <div class="kpis">
+            <div><strong>{{ adminUsers().length }}</strong><span>Usuarios admin</span></div>
+            <div><strong>{{ seasons().length }}</strong><span>Temporadas</span></div>
+            <div><strong>{{ teams().length }}</strong><span>Times</span></div>
+            <div><strong>{{ players().length }}</strong><span>Jogadores</span></div>
+            <div><strong>{{ matches().length }}</strong><span>Jogos</span></div>
+          </div>
+        </article>
+      }
+
+      @if (activeSection() === 'users') {
+        <article class="card">
+          <div class="section-head">
+            <h1>Acesso de usuarios</h1>
+            <div class="head-actions">
+              <button type="button" (click)="openModal('editMyUser')">Editar meu usuario</button>
+              <button type="button" (click)="openModal('createUser')">Novo usuario</button>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Nome</th><th>Email</th><th>Tipo</th><th>Status</th><th>UID</th></tr></thead>
+              <tbody>
+                @for (item of adminUsers(); track item.uid) {
+                  <tr>
+                    <td>{{ item.nome }}</td>
+                    <td>{{ item.email }}</td>
+                    <td>{{ item.tipo }}</td>
+                    <td>{{ item.ativo ? 'Ativo' : 'Inativo' }}</td>
+                    <td>{{ item.uid }}</td>
+                  </tr>
+                } @empty {
+                  <tr><td colspan="5">Sem usuarios.</td></tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </article>
+      }
+
+      @if (activeSection() === 'seasons') {
+        <article class="card">
+          <div class="section-head">
+            <h1>Temporadas</h1>
+            <button type="button" (click)="openModal('createSeason')">Nova temporada</button>
+          </div>
+
+          <ul class="simple-list">
+            @for (season of seasons(); track season.id) {
+              <li>
+                <span>{{ season.name }} ({{ season.year }}) - {{ season.active ? 'Ativa' : 'Inativa' }}</span>
+                <button type="button" (click)="activateSeason(season.id)">Ativar</button>
+              </li>
+            }
+          </ul>
+        </article>
+      }
+
+      @if (activeSection() === 'teams') {
+        <article class="card">
+          <div class="section-head">
+            <h1>Times</h1>
+            <button type="button" (click)="openModal('createTeam')">Novo time</button>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Nome</th><th>Temporada</th><th>Status</th><th>Acoes</th></tr></thead>
+              <tbody>
+                @for (team of teams(); track team.id) {
+                  <tr>
+                    <td>{{ team.name }}</td>
+                    <td>{{ team.seasonId }}</td>
+                    <td>{{ team.active ? 'Ativo' : 'Inativo' }}</td>
+                    <td><button type="button" (click)="deleteTeam(team.id)">Remover</button></td>
+                  </tr>
+                } @empty {
+                  <tr><td colspan="4">Sem times cadastrados.</td></tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </article>
+      }
+
+      @if (activeSection() === 'players') {
+        <article class="card">
+          <div class="section-head">
+            <h1>Jogadores</h1>
+            <button type="button" (click)="openModal('createPlayer')">Novo jogador</button>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Nome</th><th>Time</th><th>Status</th><th>Acoes</th></tr></thead>
+              <tbody>
+                @for (player of players(); track player.id) {
+                  <tr>
+                    <td>{{ player.name }}</td>
+                    <td>{{ teamName(player.teamId) }}</td>
+                    <td>{{ player.status }}</td>
+                    <td>
+                      <button type="button" (click)="editPlayer(player)">Editar</button>
+                      <button type="button" (click)="deletePlayer(player.id)">Remover</button>
+                    </td>
+                  </tr>
+                } @empty {
+                  <tr><td colspan="4">Sem jogadores cadastrados.</td></tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </article>
+      }
+
+      @if (activeSection() === 'matches') {
+        <article class="card">
+          <div class="section-head">
+            <h1>Tabela do campeonato</h1>
+            <button type="button" (click)="openModal('createMatch')">Cadastrar jogo</button>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Rodada</th><th>Data</th><th>Hora</th><th>Confronto</th></tr></thead>
+              <tbody>
+                @for (match of matches(); track match.id) {
+                  <tr>
+                    <td>{{ match.round }}</td>
+                    <td>{{ match.date }}</td>
+                    <td>{{ match.time }}</td>
+                    <td>{{ teamName(match.homeTeamId) }} x {{ teamName(match.awayTeamId) }}</td>
+                  </tr>
+                } @empty {
+                  <tr><td colspan="4">Sem jogos cadastrados.</td></tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </article>
+      }
+
+      @if (activeSection() === 'results') {
+        <article class="card">
+          <div class="section-head">
+            <h1>Resultados das partidas</h1>
+            <button type="button" (click)="openModal('createResult')">Lancar resultado</button>
+          </div>
+
+          <p class="muted">Registre placar e estatisticas por jogador em popup.</p>
+        </article>
+      }
+
+      @if (activeSection() === 'mvp') {
+        <article class="card">
+          <div class="section-head">
+            <h1>MVP Estatisticas</h1>
+            <button type="button" (click)="openModal('createMvp')">Cadastrar MVP</button>
+          </div>
+
+          <p class="muted">Defina o Top 3 por categoria para exibicao publica.</p>
+        </article>
+      }
+    }
+  </section>
+</div>
+
+@if (activeModal() !== null) {
+  <div class="modal-backdrop" (click)="closeModal()"></div>
+}
+
+@if (activeModal() === 'createUser') {
+  <section class="modal" role="dialog" aria-modal="true">
+    <h2>Novo usuario administrativo</h2>
+    <form [formGroup]="adminUserForm" (ngSubmit)="createAdminUser()" class="form-grid">
+      <input placeholder="UID (Auth)" formControlName="uid" />
+      <input placeholder="Nome" formControlName="nome" />
+      <input placeholder="Email" formControlName="email" />
+      <select formControlName="tipo"><option value="ADMIN">ADMIN</option><option value="MASTER">MASTER</option></select>
+      <input placeholder="Senha (temporaria)" formControlName="senha" />
+      <label class="inline-check"><input type="checkbox" formControlName="ativo" /> Ativo</label>
+      <div class="modal-actions"><button type="button" (click)="closeModal()">Cancelar</button><button type="submit">Salvar</button></div>
+    </form>
+  </section>
+}
+
+@if (activeModal() === 'editMyUser') {
+  <section class="modal" role="dialog" aria-modal="true">
+    <h2>Editar meu usuario</h2>
+    <form [formGroup]="myUserForm" (ngSubmit)="saveMyUserProfile()" class="form-grid">
+      <input placeholder="UID" formControlName="uid" readonly />
+      <input placeholder="Nome" formControlName="nome" />
+      <input placeholder="URL imagem de perfil" formControlName="imagemPerfil" />
+      <div class="modal-actions"><button type="button" (click)="closeModal()">Cancelar</button><button type="submit">Salvar</button></div>
+    </form>
+  </section>
+}
+
+@if (activeModal() === 'createSeason') {
+  <section class="modal" role="dialog" aria-modal="true">
+    <h2>Nova temporada</h2>
+    <form [formGroup]="seasonForm" (ngSubmit)="createSeason()" class="form-grid">
+      <input placeholder="ID da temporada" formControlName="id" />
+      <input placeholder="Nome" formControlName="name" />
+      <input type="number" placeholder="Ano" formControlName="year" />
+      <label class="inline-check"><input type="checkbox" formControlName="active" /> Ativa</label>
+      <div class="modal-actions"><button type="button" (click)="closeModal()">Cancelar</button><button type="submit">Salvar</button></div>
+    </form>
+  </section>
+}
+
+@if (activeModal() === 'createTeam') {
+  <section class="modal" role="dialog" aria-modal="true">
+    <h2>Novo time</h2>
+    <form [formGroup]="teamForm" (ngSubmit)="createTeam()" class="form-grid">
+      <input placeholder="ID do time" formControlName="id" />
+      <input placeholder="Nome do time" formControlName="name" />
+      <input placeholder="URL do escudo" formControlName="shieldUrl" />
+      <select formControlName="seasonId">
+        <option value="">Selecione temporada</option>
+        @for (season of seasons(); track season.id) {
+          <option [value]="season.id">{{ season.name }}</option>
+        }
+      </select>
+      <label class="inline-check"><input type="checkbox" formControlName="active" /> Ativo</label>
+      <div class="modal-actions"><button type="button" (click)="closeModal()">Cancelar</button><button type="submit">Salvar</button></div>
+    </form>
+  </section>
+}
+
+@if (activeModal() === 'createPlayer') {
+  <section class="modal" role="dialog" aria-modal="true">
+    <h2>Adicionar/editar jogador</h2>
+    <form [formGroup]="playerForm" (ngSubmit)="savePlayer()" class="form-grid">
+      <input placeholder="ID do jogador" formControlName="id" />
+      <input placeholder="Nome" formControlName="name" />
+      <select formControlName="teamId">
+        <option value="">Selecione time</option>
+        @for (team of teams(); track team.id) {
+          <option [value]="team.id">{{ team.name }}</option>
+        }
+      </select>
+      <select formControlName="status">
+        <option value="validado">validado</option>
+        <option value="pendente">pendente</option>
+        <option value="rejeitado">rejeitado</option>
+      </select>
+      <div class="modal-actions"><button type="button" (click)="closeModal()">Cancelar</button><button type="submit">Salvar</button></div>
+    </form>
+  </section>
+}
+
+@if (activeModal() === 'createMatch') {
+  <section class="modal" role="dialog" aria-modal="true">
+    <h2>Cadastrar jogo da tabela</h2>
+    <form [formGroup]="matchForm" (ngSubmit)="createMatch()" class="form-grid">
+      <input placeholder="ID do jogo" formControlName="id" />
+      <select formControlName="seasonId">
+        <option value="">Selecione temporada</option>
+        @for (season of seasons(); track season.id) {
+          <option [value]="season.id">{{ season.name }}</option>
+        }
+      </select>
+      <input type="number" placeholder="Rodada" formControlName="round" />
+      <input type="date" formControlName="date" />
+      <input type="time" formControlName="time" />
+      <select formControlName="homeTeamId">
+        <option value="">Mandante</option>
+        @for (team of teams(); track team.id) {
+          <option [value]="team.id">{{ team.name }}</option>
+        }
+      </select>
+      <select formControlName="awayTeamId">
+        <option value="">Visitante</option>
+        @for (team of teams(); track team.id) {
+          <option [value]="team.id">{{ team.name }}</option>
+        }
+      </select>
+      <div class="modal-actions"><button type="button" (click)="closeModal()">Cancelar</button><button type="submit">Salvar</button></div>
+    </form>
+  </section>
+}
+
+@if (activeModal() === 'createResult') {
+  <section class="modal modal-wide" role="dialog" aria-modal="true">
+    <h2>Lancar resultado e estatisticas</h2>
+    <form [formGroup]="resultForm" class="form-grid">
+      <select formControlName="matchId">
+        <option value="">Selecione jogo</option>
+        @for (match of matches(); track match.id) {
+          <option [value]="match.id">R{{ match.round }} - {{ teamName(match.homeTeamId) }} x {{ teamName(match.awayTeamId) }}</option>
+        }
+      </select>
+      <input type="number" placeholder="Gols mandante" formControlName="homeGoals" />
+      <input type="number" placeholder="Gols visitante" formControlName="awayGoals" />
+    </form>
+
+    <div class="inline-actions">
+      <button type="button" (click)="addPlayerStatRow()">Adicionar jogador</button>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Jogador</th><th>Gols</th><th>Chute a gol</th><th>Defesas</th><th>Goleiro</th><th>Cartoes</th><th>MVP Jogo</th><th>MVP Rodada</th><th></th></tr>
+        </thead>
+        <tbody>
+          @for (ctrl of playerStatsArray.controls; track $index) {
+            <tr [formGroup]="$any(ctrl)">
+              <td>
+                <select formControlName="playerId">
+                  <option value="">Selecione</option>
+                  @for (player of players(); track player.id) {
+                    <option [value]="player.id">{{ player.name }} ({{ teamName(player.teamId) }})</option>
+                  }
+                </select>
+              </td>
+              <td><input type="number" formControlName="gols" /></td>
+              <td><input type="number" formControlName="chute_a_gol" /></td>
+              <td><input type="number" formControlName="defesas" /></td>
+              <td><input type="number" formControlName="goleiro" /></td>
+              <td><input type="number" formControlName="cartoes" /></td>
+              <td><input type="number" formControlName="mvp_jogo" /></td>
+              <td><input type="number" formControlName="mvp_rodada" /></td>
+              <td><button type="button" (click)="removePlayerStatRow($index)">Remover</button></td>
+            </tr>
+          } @empty {
+            <tr><td colspan="9">Nenhuma estatistica adicionada.</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="modal-actions"><button type="button" (click)="closeModal()">Cancelar</button><button type="button" (click)="saveResult()">Salvar</button></div>
+  </section>
+}
+
+@if (activeModal() === 'createMvp') {
+  <section class="modal" role="dialog" aria-modal="true">
+    <h2>Cadastrar MVP de estatistica</h2>
+    <form [formGroup]="mvpForm" (ngSubmit)="saveMvpSummary()" class="form-grid">
+      <select formControlName="seasonId">
+        <option value="">Selecione temporada</option>
+        @for (season of seasons(); track season.id) {
+          <option [value]="season.id">{{ season.name }}</option>
+        }
+      </select>
+      <select formControlName="category">
+        <option value="artilheiro">artilheiro</option>
+        <option value="assistente">assistente</option>
+        <option value="defesas">defesas</option>
+        <option value="cartoes">cartoes</option>
+        <option value="drible">drible</option>
+      </select>
+      <select formControlName="p1PlayerId">
+        <option value="">1o lugar jogador</option>
+        @for (player of players(); track player.id) {
+          <option [value]="player.id">{{ player.name }}</option>
+        }
+      </select>
+      <input type="number" placeholder="Valor 1o" formControlName="p1Value" />
+      <select formControlName="p2PlayerId">
+        <option value="">2o lugar jogador</option>
+        @for (player of players(); track player.id) {
+          <option [value]="player.id">{{ player.name }}</option>
+        }
+      </select>
+      <input type="number" placeholder="Valor 2o" formControlName="p2Value" />
+      <select formControlName="p3PlayerId">
+        <option value="">3o lugar jogador</option>
+        @for (player of players(); track player.id) {
+          <option [value]="player.id">{{ player.name }}</option>
+        }
+      </select>
+      <input type="number" placeholder="Valor 3o" formControlName="p3Value" />
+      <div class="modal-actions"><button type="button" (click)="closeModal()">Cancelar</button><button type="submit">Salvar</button></div>
+    </form>
+  </section>
+}
+
+<div class="toast-stack">
+  @for (toast of toasts(); track toast.id) {
+    <article class="toast" [class.success]="toast.type === 'success'" [class.error]="toast.type === 'error'" [class.info]="toast.type === 'info'">
+      <span>{{ toast.message }}</span>
+      <button type="button" (click)="dismissToast(toast.id)">x</button>
     </article>
-    <article class="widget">
-      <h2>Status de Validacao</h2>
-      <p>0 pendentes</p>
-    </article>
-    <article class="widget">
-      <h2>Proximo Jogo</h2>
-      <p>A definir pela organizacao</p>
-    </article>
-  </div>
-</section>
+  }
+</div>

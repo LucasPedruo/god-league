@@ -1,5 +1,6 @@
-import { Component, inject } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Component, inject, signal } from '@angular/core';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { filter } from 'rxjs';
 import { AuthService } from './core/services/auth.service';
 
 @Component({
@@ -9,8 +10,16 @@ import { AuthService } from './core/services/auth.service';
   styleUrl: './app.scss'
 })
 export class App {
+  private readonly router = inject(Router);
   protected readonly title = 'Gods League';
   protected readonly auth = inject(AuthService);
+  protected readonly dashboardRoute = signal(this.router.url.startsWith('/dashboard'));
+
+  constructor() {
+    this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
+      this.dashboardRoute.set(this.router.url.startsWith('/dashboard'));
+    });
+  }
 
   protected async logout(): Promise<void> {
     await this.auth.logout();

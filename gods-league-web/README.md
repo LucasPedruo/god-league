@@ -1,59 +1,87 @@
-# GodsLeagueWeb
+# Gods League Web
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.0.
+Aplicacao Angular do projeto Gods League (AdBangu).
 
-## Development server
+## Visao geral
 
-To start a local development server, run:
+O app possui duas areas:
+- area publica de consulta do campeonato;
+- area administrativa em `/dashboard` para operacao do `admin_master`.
 
+## Rotas publicas
+
+- `/` Inicio
+- `/classificacao`
+- `/times`
+- `/estatisticas`
+- `/login`
+
+## Area administrativa
+
+- `/dashboard` (protegida por autenticacao + perfil)
+- Layout proprio com barra lateral (sem topbar publica)
+- Modulos:
+  - usuarios admin
+  - temporadas
+  - times
+  - jogadores
+  - tabela/jogos
+  - resultados
+  - MVP estatisticas
+
+## Autenticacao e perfis
+
+- Firebase Authentication (Email/Password)
+- Sem auto-cadastro publico
+- Perfil carregado de:
+  1. `users/{uid}`
+  2. fallback `admin_users/{uid}`
+
+Mapeamento de `admin_users.tipo`:
+- `MASTER` -> `admin_master`
+- `ADMIN` -> `admin_master`
+
+## Fonte de dados (Firestore)
+
+Colecoes principais:
+- `seasons`
+- `teams`
+- `players`
+- `matches`
+- `mvp_summary`
+- `admin_users`
+- `users`
+
+## Setup local
+
+1. Instalar dependencias:
 ```bash
-ng serve
+npm install
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+2. Configurar Firebase em:
+- `src/environments/environment.ts`
+- `src/environments/environment.prod.ts`
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
+3. Executar em desenvolvimento:
 ```bash
-ng generate component component-name
+npm start
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Build e testes
 
+Build:
 ```bash
-ng generate --help
+npm run build
 ```
 
-## Building
-
-To build the project run:
-
+Testes:
 ```bash
-ng build
+npm run test -- --watch=false
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## Documentacao do repositorio
 
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- Especificacao funcional: `../especificacao-do-projeto.md`
+- Prompt operacional do agente: `../agente.md`
+- Guia Firebase para operacao: `../firebase-setup.md`

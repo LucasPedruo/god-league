@@ -1,0 +1,55 @@
+<section class="page-head">
+  <h1>Classificacao</h1>
+  <p>Tabela por pontuacao dos times cadastrados.</p>
+</section>
+
+@if (loading()) {
+  <section class="state-card"><p>Carregando classificacao...</p></section>
+} @else if (error()) {
+  <section class="state-card">
+    <p>{{ error() }}</p>
+    <button type="button" (click)="reload()">Tentar novamente</button>
+  </section>
+} @else {
+  <section class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Time</th>
+          <th>PTS</th>
+          <th>J</th>
+          <th>V</th>
+          <th>E</th>
+          <th>D</th>
+          <th>GP</th>
+          <th>GC</th>
+          <th>SG</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track row.teamId; let i = $index) {
+          <tr>
+            <td>{{ i + 1 }}</td>
+            <td>
+              <div class="team-inline">
+                <img [src]="row.shieldUrl" [alt]="'Escudo de ' + row.teamName" loading="lazy" />
+                <span>{{ row.teamName }}</span>
+              </div>
+            </td>
+            <td><strong>{{ row.pontos }}</strong></td>
+            <td>{{ row.jogos }}</td>
+            <td>{{ row.vitorias }}</td>
+            <td>{{ row.empates }}</td>
+            <td>{{ row.derrotas }}</td>
+            <td>{{ row.golsPro }}</td>
+            <td>{{ row.golsContra }}</td>
+            <td>{{ row.saldoGols }}</td>
+          </tr>
+        } @empty {
+          <tr><td colspan="10" class="empty">Sem dados de classificacao publicados.</td></tr>
+        }
+      </tbody>
+    </table>
+  </section>
+}
