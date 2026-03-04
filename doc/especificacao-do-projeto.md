@@ -216,8 +216,6 @@ Documentos de referência:
 1. `regulamento-god-league-geral.md`
 2. `regulamento-ujadb-god-league.md`
 3. `especificacao-do-projeto.md` (este arquivo)
-4. `firebase-setup.md`
-5. `agente.md`
 
 ## 13) Fora de Escopo Atual
 
@@ -225,4 +223,3 @@ Documentos de referência:
 - Aplicativo mobile nativo.
 - Pagamentos.
 - Integrações avançadas de arbitragem por vídeo.
-
