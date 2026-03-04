@@ -10,6 +10,11 @@ Entregar e manter uma plataforma web de campeonato com:
 ## Contexto
 A operacao era descentralizada (WhatsApp, papel, comunicacao verbal). O sistema deve ser a fonte oficial de informacao.
 
+## Documentos Oficiais de Escopo
+- `regulamento-god-league-geral.md` (escopo macro da competicao inter igrejas)
+- `regulamento-ujadb-god-league.md` (escopo operacional da edicao UJADB)
+- `especificacao-do-projeto.md` (funcionamento tecnico do sistema)
+
 ## Stack
 - Angular (frontend)
 - Firebase Authentication

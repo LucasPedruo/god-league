@@ -84,6 +84,8 @@ npm run test -- --watch=false
 
 ## Documentacao do repositorio
 
-- Especificacao funcional: `../especificacao-do-projeto.md`
+- Regulamento geral da liga: `../regulamento-god-league-geral.md`
+- Regulamento operacional UJADB: `../regulamento-ujadb-god-league.md`
+- Documentacao tecnica do sistema: `../especificacao-do-projeto.md`
 - Prompt operacional do agente: `../agente.md`
 - Guia Firebase para operacao: `../firebase-setup.md`

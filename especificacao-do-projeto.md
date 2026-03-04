@@ -1,121 +1,107 @@
-# God League - Especificacao do Projeto
+# God League - Documentação do Projeto (Sistema)
 
-## Introducao
+Atualização: 04 de março de 2026
 
-A AdBangu realiza anualmente um campeonato de futebol para jovens em formato de pontos corridos, envolvendo matriz e setores. Historicamente, as informacoes da competicao ficaram dispersas em WhatsApp, papel e comunicacao verbal.
+## 1) Objetivo deste Documento
 
-A plataforma **God League** centraliza a operacao com:
-- **Site publico** para divulgacao oficial.
-- **Painel administrativo (dashboard)** para gestao por perfil, com foco operacional no `admin_master`.
+Este documento descreve **como o projeto funciona tecnicamente**: arquitetura, fluxos, permissões, dados, rotas e operação.
 
----
+Não é regulamento esportivo da competição. Para regulamentos, consultar:
 
-## Problema
+- `regulamento-god-league-geral.md` (escopo macro da liga)
+- `regulamento-ujadb-god-league.md` (escopo operacional UJADB)
 
-Principais dores que o projeto resolve:
-- Falta de local unico para regulamento, jogos, classificacao, times e estatisticas.
-- Ausencia de historico confiavel por temporada.
-- Cadastro de times e jogadores sem padronizacao central.
-- Dificuldade de validar se estatisticas e jogadores estao corretos.
-- Baixa rastreabilidade das alteracoes da competicao.
+## 2) Visão Geral do Sistema
 
----
+O sistema God League é uma plataforma web composta por:
 
-## Objetivos
+1. **Área pública** para consulta oficial da competição.
+2. **Área administrativa** para operação da temporada.
 
-### Objetivo Geral
+Objetivo principal:
 
-Disponibilizar uma plataforma web para publicar, operar e auditar o campeonato de jovens da AdBangu.
+- centralizar informações;
+- reduzir operação informal;
+- garantir rastreabilidade e consistência dos dados.
 
-### Objetivos Especificos
+## 3) Stack Tecnológica
 
-- Publicar dados oficiais em paginas publicas de facil consulta.
-- Concentrar operacao administrativa no painel do `admin_master`.
-- Garantir login sem auto-cadastro.
-- Manter historico por temporada e vinculo consistente entre jogos, times, jogadores e estatisticas.
+- Frontend: Angular (standalone components)
+- Autenticação: Firebase Authentication
+- Banco: Cloud Firestore
+- Arquivos de mídia: Firebase Storage
+- Publicação: Firebase Hosting
 
----
+## 4) Estrutura de Acesso e Perfis
 
-## Escopo Atual Implementado
+### 4.1 Perfis de usuário
 
-## Site Publico
-Rotas publicas implementadas:
-- `/` (Em breve)
-- `/liga` (Inicio da liga)
-- `/regras`
+- `visitante`: acesso somente às rotas públicas.
+- `time`: acesso autenticado conforme regras liberadas.
+- `admin_master`: administração completa da operação.
+
+### 4.2 Regras de autenticação
+
+- Sem auto-cadastro público.
+- Login por e-mail/senha (Firebase Auth).
+- Rotas protegidas por guards de autenticação e papel.
+
+### 4.3 Fontes de permissões aceitas
+
+Compatibilidade em duas coleções:
+
+1. `users/{uid}`
+2. `admin_users/{uid}`
+
+Mapeamento herdado para `admin_users.tipo`:
+
+- `MASTER` => `admin_master`
+- `ADMIN` => `admin_master`
+
+## 5) Rotas do Frontend
+
+### 5.1 Rotas públicas
+
+- `/` página de abertura (Em breve)
+- `/liga` página principal da liga
+- `/regras` regulamento público da edição (atualmente UJADB)
 - `/classificacao`
 - `/times`
 - `/estatisticas`
+- `/login`
 
-Funcionalidades implementadas:
-- Home com:
-  - times inscritos;
-  - tabela de jogos (rodada, data, horario, mandante e visitante);
-  - resumo MVP (Top 3: artilheiro, assistente, defesas, cartoes, drible).
-- Classificacao por pontos baseada em resultados de partidas (`homeGoals`, `awayGoals`).
-- Lista de todos os times da temporada ativa.
-- Estatisticas detalhadas com filtro por categoria:
-  - `gols`
-  - `chute_a_gol`
-  - `defesas`
-  - `goleiro`
-  - `cartoes`
-  - `mvp_jogo`
-  - `mvp_rodada`
+### 5.2 Rotas protegidas
 
-## Autenticacao e Controle de Acesso
+- `/dashboard` (exige autenticação + perfil permitido)
 
-- Login por e-mail/senha (Firebase Auth).
-- Sem cadastro publico.
-- Guards:
-  - `guestGuard` em `/login`;
-  - `authGuard` + `roleGuard` em `/dashboard`.
-- Perfis aceitos:
-  - `time`
-  - `admin_master`
+### 5.3 Rota de fallback
 
-Fontes de permissao aceitas no app:
-1. `users/{uid}`
-2. `admin_users/{uid}` (compatibilidade)
+- `**` página 404
 
-Mapeamento de `admin_users.tipo`:
-- `MASTER` -> `admin_master`
-- `ADMIN` -> `admin_master`
+## 6) Módulos Funcionais
 
-## Dashboard Administrativo
+### 6.1 Módulos públicos
 
-- Rota `/dashboard` sem barra superior global.
-- Layout com barra lateral propria.
-- Secoes implementadas:
-  - Visao geral.
-  - Usuarios admin (listar/cadastrar).
-  - Temporadas (criar/ativar).
-  - Times (adicionar/remover/editar por salvar com mesmo ID).
-  - Jogadores (adicionar/remover/editar).
-  - Tabela/Jogos (cadastrar confrontos).
-  - Resultados (placar + estatisticas por jogador por partida).
-  - MVP Estatisticas (Top 3 por categoria para `mvp_summary`).
+- Home da liga com times, tabela e resumo de estatísticas.
+- Classificação por pontuação a partir dos resultados cadastrados.
+- Página de times.
+- Estatísticas detalhadas por categoria.
+- Página de regras da competição.
 
-Observacao:
-- O formulario de usuario admin escreve em `admin_users`.
-- Criacao de conta no Firebase Authentication continua sendo etapa separada (console/admin backend).
+### 6.2 Módulos administrativos
 
----
+- Gestão de usuários admin.
+- Gestão de temporadas (criação e ativação).
+- Gestão de times.
+- Gestão de jogadores.
+- Gestão de jogos/tabela.
+- Lançamento de resultados.
+- Consolidação de MVP/resumos por categoria.
 
-## Regras de Negocio
+## 7) Modelo de Dados (Firestore)
 
-- Nao existe auto-cadastro publico.
-- Dados oficiais do campeonato sao publicados/operados pelo `admin_master`.
-- Operacao de rotina (temporadas, times, jogos, resultados, MVP) deve ser feita no dashboard.
-- Cada estatistica deve estar vinculada a jogador existente.
-- Jogadores validos para ranking/publicacao: `status` vazio, `validado` ou `validated`.
-- Deve existir uma temporada ativa em `seasons` para renderizacao correta da home.
+Coleções principais:
 
----
-
-## Modelo de Dados (Firestore)
-
-Colecoes usadas pelo sistema:
 - `admin_users`
 - `users`
 - `seasons`
@@ -124,57 +110,119 @@ Colecoes usadas pelo sistema:
 - `matches`
 - `mvp_summary`
 
-Campos relevantes por colecao:
-- `seasons`: `name`, `year`, `active`
-- `teams`: `name`, `shieldUrl`, `seasonId`, `active`
-- `players`: `name`, `teamId`, `status`, campos de estatistica (`gols`, `chute_a_gol`, `defesas`, `goleiro`, `cartoes`, `mvp_jogo`, `mvp_rodada`)
-- `matches`: `seasonId`, `round`, `date`, `time`, `homeTeamId`, `awayTeamId`, `homeGoals`, `awayGoals`, `playerStats[]`
-- `mvp_summary`: `seasonId`, `category`, `rankings[]`
+### 7.1 `seasons`
 
-Categorias MVP aceitas:
+Campos usuais:
+
+- `name`
+- `year`
+- `active` (boolean)
+
+Regra crítica: deve existir uma temporada ativa para publicação completa dos dados públicos.
+
+### 7.2 `teams`
+
+Campos usuais:
+
+- `name`
+- `shieldUrl`
+- `seasonId`
+- `active`
+
+### 7.3 `players`
+
+Campos usuais:
+
+- `name`
+- `teamId`
+- `status`
+- estatísticas acumuladas por categoria
+
+Observação operacional: publicação de rankings considera jogadores válidos conforme regra de status adotada no sistema.
+
+### 7.4 `matches`
+
+Campos usuais:
+
+- `seasonId`
+- `round`
+- `date`
+- `time`
+- `homeTeamId`
+- `awayTeamId`
+- `homeGoals`
+- `awayGoals`
+- `playerStats[]`
+
+### 7.5 `mvp_summary`
+
+Campos usuais:
+
+- `seasonId`
+- `category`
+- `rankings[]`
+
+## 8) Regras de Negócio do Sistema
+
+- Não permitir auto-cadastro de usuários externos.
+- Operação crítica concentrada no dashboard administrativo.
+- Dados públicos devem ser lidos do Firestore (sem dados mock em produção).
+- Estatísticas e MVP devem referenciar jogadores existentes e válidos.
+- Publicação pública deve respeitar temporada ativa.
+
+## 9) Categorias de Estatísticas
+
+### 9.1 Resumo MVP (home)
+
 - `artilheiro`
 - `assistente`
 - `defesas`
 - `cartoes`
 - `drible`
 
----
+### 9.2 Estatística detalhada
 
-## Stack Tecnica
+- `gols`
+- `chute_a_gol`
+- `defesas`
+- `goleiro`
+- `cartoes`
+- `mvp_jogo`
+- `mvp_rodada`
 
-- Frontend: Angular 21 (standalone components)
-- Backend: Firebase
-- Banco: Cloud Firestore
-- Auth: Firebase Authentication
-- Storage: Firebase Storage
-- Hosting: Firebase Hosting
+## 10) Fluxo Operacional Recomendado
 
----
+1. Criar temporada.
+2. Marcar temporada ativa.
+3. Cadastrar/atualizar times da temporada.
+4. Cadastrar jogadores por time.
+5. Publicar tabela de jogos.
+6. Lançar resultados por rodada.
+7. Atualizar estatísticas e resumos.
+8. Validar classificação pública.
 
-## Requisitos Nao Funcionais
+## 11) Critérios de Qualidade e Governança
 
-- Interface responsiva (desktop/mobile)
-- Tema escuro como base visual
-- Controle de acesso por perfil
-- Persistencia em nuvem
-- Disponibilidade para consulta publica
+- Rastreabilidade de mudanças no painel.
+- Consistência entre jogos, placares e classificação.
+- Consistência entre estatísticas e vínculo do jogador.
+- Clareza de comunicação no frontend público.
+- Atualização contínua da documentação.
 
----
+## 12) Estrutura de Documentação do Repositório
 
-## Criterios de Aceite Atualizados
+Documentos de referência:
 
-- Visitante acessa Inicio, Classificacao, Times e Estatisticas sem login.
-- Home exibe times, jogos e resumo MVP com dados reais do Firestore.
-- Classificacao e calculada por pontos com base nos resultados cadastrados.
-- Usuario logado visualiza menu de perfil com acesso ao painel administrativo.
-- Em `/dashboard`, navegacao ocorre por barra lateral e sem topbar publica.
-- `admin_master` consegue operar usuarios admin, temporadas, times, jogadores, jogos, resultados e MVP.
+1. `regulamento-god-league-geral.md`
+2. `regulamento-ujadb-god-league.md`
+3. `especificacao-do-projeto.md` (este arquivo)
+4. `firebase-setup.md`
+5. `agente.md`
 
----
+## 13) Fora de Escopo Atual
 
-## Fora do Escopo (ate o momento)
-
-- Cadastro aberto ao publico.
+- Cadastro público aberto.
 - Aplicativo mobile nativo.
 - Pagamentos.
-- Integracoes externas de arbitragem/video.
+- Integrações avançadas de arbitragem por vídeo.
+
