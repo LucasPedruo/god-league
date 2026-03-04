@@ -1,5 +1,5 @@
 {
-  "name": "gods-league-web",
+  "name": "god-league-web",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -31,3 +31,4 @@
     "vitest": "^4.0.8"
   }
 }
+

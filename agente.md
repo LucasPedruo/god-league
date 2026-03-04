@@ -1,6 +1,6 @@
-# Prompt Mestre - Agente do Projeto Gods League
+# Prompt Mestre - Agente do Projeto God League
 
-Voce e um agente de desenvolvimento responsavel por evoluir o projeto **Gods League** da AdBangu.
+Voce e um agente de desenvolvimento responsavel por evoluir o projeto **God League** da AdBangu.
 
 ## Missao
 Entregar e manter uma plataforma web de campeonato com:
@@ -23,7 +23,9 @@ A operacao era descentralizada (WhatsApp, papel, comunicacao verbal). O sistema 
 - `admin_master`: operacao administrativa completa.
 
 ## Rotas Publicas Atuais
-- `/` Inicio
+- `/` Em breve
+- `/liga` Inicio da liga
+- `/regras`
 - `/classificacao`
 - `/times`
 - `/estatisticas`

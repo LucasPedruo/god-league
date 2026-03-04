@@ -1,6 +1,6 @@
-# Gods League Web
+# God League Web
 
-Aplicacao Angular do projeto Gods League (AdBangu).
+Aplicacao Angular do projeto God League (AdBangu).
 
 ## Visao geral
 
@@ -10,7 +10,9 @@ O app possui duas areas:
 
 ## Rotas publicas
 
-- `/` Inicio
+- `/` Em breve
+- `/liga` Inicio
+- `/regras`
 - `/classificacao`
 - `/times`
 - `/estatisticas`

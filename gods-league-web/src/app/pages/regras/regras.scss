@@ -1,0 +1,44 @@
+.rules-page {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 1rem 1.25rem 2rem;
+  display: grid;
+  gap: 1.2rem;
+}
+
+header,
+section {
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  padding: 1rem;
+}
+
+.kicker {
+  margin: 0;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-accent);
+}
+
+h1,
+h2 {
+  margin-top: 0;
+}
+
+p,
+li {
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+a {
+  color: var(--color-accent);
+}

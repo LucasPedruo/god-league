@@ -1,10 +1,10 @@
-# Gods League - Especificacao do Projeto
+# God League - Especificacao do Projeto
 
 ## Introducao
 
 A AdBangu realiza anualmente um campeonato de futebol para jovens em formato de pontos corridos, envolvendo matriz e setores. Historicamente, as informacoes da competicao ficaram dispersas em WhatsApp, papel e comunicacao verbal.
 
-A plataforma **Gods League** centraliza a operacao com:
+A plataforma **God League** centraliza a operacao com:
 - **Site publico** para divulgacao oficial.
 - **Painel administrativo (dashboard)** para gestao por perfil, com foco operacional no `admin_master`.
 
@@ -40,7 +40,9 @@ Disponibilizar uma plataforma web para publicar, operar e auditar o campeonato d
 
 ## Site Publico
 Rotas publicas implementadas:
-- `/` (Inicio)
+- `/` (Em breve)
+- `/liga` (Inicio da liga)
+- `/regras`
 - `/classificacao`
 - `/times`
 - `/estatisticas`

@@ -7,7 +7,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "gods-league-web": {
+    "god-league-web": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -68,10 +68,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "gods-league-web:build:production"
+              "buildTarget": "god-league-web:build:production"
             },
             "development": {
-              "buildTarget": "gods-league-web:build:development"
+              "buildTarget": "god-league-web:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -83,3 +83,4 @@
     }
   }
 }
+

@@ -11,7 +11,7 @@ import { AuthService } from './core/services/auth.service';
 })
 export class App {
   private readonly router = inject(Router);
-  protected readonly title = 'Gods League';
+  protected readonly title = 'God League';
   protected readonly auth = inject(AuthService);
   protected readonly dashboardRoute = signal(this.router.url.startsWith('/dashboard'));
 

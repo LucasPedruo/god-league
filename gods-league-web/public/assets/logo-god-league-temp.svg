@@ -1,0 +1,9 @@
+<svg width="640" height="640" viewBox="0 0 640 640" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="640" height="640" rx="120" fill="#0F1D18"/>
+  <circle cx="320" cy="236" r="120" fill="#1F8A5A"/>
+  <path d="M320 164L356 236H284L320 164Z" fill="#F1FAF5"/>
+  <path d="M190 392C190 320.203 248.203 262 320 262C391.797 262 450 320.203 450 392V430H190V392Z" fill="#2AB173"/>
+  <rect x="170" y="430" width="300" height="54" rx="27" fill="#F1FAF5"/>
+  <text x="320" y="525" text-anchor="middle" fill="#F1FAF5" font-family="Arial, sans-serif" font-size="68" font-weight="700">GL</text>
+  <text x="320" y="575" text-anchor="middle" fill="#A9DCC4" font-family="Arial, sans-serif" font-size="34" font-weight="600">TEMP LOGO</text>
+</svg>

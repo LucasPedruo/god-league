@@ -1,0 +1,38 @@
+.coming-soon {
+  min-height: calc(100dvh - 140px);
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  text-align: center;
+  gap: 0.75rem;
+  padding: 1.5rem;
+}
+
+img {
+  width: min(220px, 70vw);
+  height: auto;
+}
+
+.kicker {
+  margin: 0;
+  color: var(--color-accent);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.description {
+  margin: 0;
+  max-width: 46ch;
+  color: var(--color-text-muted);
+}
+
+a {
+  color: var(--color-accent);
+  font-weight: 600;
+}

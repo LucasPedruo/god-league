@@ -5,13 +5,17 @@ import { roleGuard } from './core/guards/role.guard';
 import { Classificacao } from './pages/classificacao/classificacao';
 import { Dashboard } from './pages/dashboard/dashboard';
 import { Estatisticas } from './pages/estatisticas/estatisticas';
+import { ComingSoon } from './pages/coming-soon/coming-soon';
 import { Home } from './pages/home/home';
 import { Login } from './pages/login/login';
 import { NotFound } from './pages/not-found/not-found';
+import { Regras } from './pages/regras/regras';
 import { Times } from './pages/times/times';
 
 export const routes: Routes = [
-  { path: '', component: Home },
+  { path: '', component: ComingSoon },
+  { path: 'liga', component: Home },
+  { path: 'regras', component: Regras },
   { path: 'classificacao', component: Classificacao },
   { path: 'times', component: Times },
   { path: 'estatisticas', component: Estatisticas },
